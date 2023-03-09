@@ -30,6 +30,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
+  count  = var.bucket == true ? 1 : 0
   bucket = aws_s3_bucket.bucket[0].id
 
   rule {
@@ -42,6 +43,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
 }
 
 resource "aws_s3_bucket_versioning" "bucket" {
+  count  = var.bucket == true ? 1 : 0
   bucket = aws_s3_bucket.bucket[0].id
   versioning_configuration {
     status = "Enabled"

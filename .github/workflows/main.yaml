@@ -95,9 +95,9 @@ jobs:
           && terraform show Prod.plan
         continue-on-error: false
 
-      - name: Terraform Deploy - Production
-        id: deploy
-        run: |
-          ENV=Prod make apply \
-          && terraform show Prod.plan
-        continue-on-error: false
+      # - name: Terraform Deploy - Production
+      #   id: deploy
+      #   run: |
+      #     ENV=Prod make apply \
+      #     && terraform show Prod.plan
+      #   continue-on-error: false

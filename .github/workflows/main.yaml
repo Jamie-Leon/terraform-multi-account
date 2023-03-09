@@ -1,0 +1,57 @@
+name: Terraform Deployment after push
+
+Triggers:
+  - Type: Push
+    Branches:
+      - main
+      
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  merged:
+    name: deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.2.6
+
+      - name: Run terraform fmt check
+        id: fmt
+        run: terraform fmt -check -diff -recursive
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: TerraformUser
+          role-session-name: InfraDeployOnMerge
+
+      - name: Initialize Terraform
+        id: init
+        run: |
+          rm -rf .terraform.*
+          terraform init -input=false
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          $ENV=Dev make plan \
+          && terraform show Dev.plan
+        continue-on-error: true
+
+      - name: Apply Terraform
+        if: steps.plan.outcome == 'success'
+        id: apply
+        continue-on-error: false
+        run: |
+          $ENV=Dev make apply

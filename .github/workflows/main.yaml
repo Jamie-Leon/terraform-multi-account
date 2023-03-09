@@ -3,7 +3,7 @@ name: Terraform Deployment after push
 on:
   push:
     branches:
-    - main
+      - main
 
 permissions:
   id-token: write
@@ -13,7 +13,7 @@ env:
   AWS_REGION: eu-west-2
 
 jobs:
-  merged:
+  Dev:
     name: Dev Deployment
     runs-on: ubuntu-20.04
     steps:
@@ -53,13 +53,7 @@ jobs:
           && terraform show Dev.plan
         continue-on-error: false
 
-      # - name: Apply Terraform
-      #   if: steps.plan.outcome == 'success'
-      #   id: apply
-      #   continue-on-error: false
-      #   run: |
-      #     ENV=Dev make apply
-
+  Prod:
     name: Prod Deployment
     runs-on: ubuntu-20.04
     steps:
@@ -98,10 +92,3 @@ jobs:
           ENV=Prod make plan \
           && terraform show Prod.plan
         continue-on-error: false
-
-      # - name: Apply Terraform
-      #   if: steps.plan.outcome == 'success'
-      #   id: apply
-      #   continue-on-error: false
-      #   run: |
-      #     ENV=Dev make apply

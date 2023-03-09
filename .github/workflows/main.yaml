@@ -33,7 +33,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: TerraformUser
+          role-to-assume: arn:aws:iam::847175655404:role/TerraformUser
           role-session-name: InfraDeployOnMerge
 
       - name: Initialize Terraform

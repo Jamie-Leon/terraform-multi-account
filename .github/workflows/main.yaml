@@ -28,6 +28,8 @@ jobs:
   Dev:
     name: Dev Deployment
     runs-on: ubuntu-20.04
+    environment:
+      name: Production
     needs: Lint
     steps:
       - name: Check out code
@@ -62,6 +64,8 @@ jobs:
     name: Prod Deployment
     runs-on: ubuntu-20.04
     needs: Lint
+    environment:
+      name: Production
     steps:
       - name: Check out code
         uses: actions/checkout@v3.3.0
@@ -92,7 +96,7 @@ jobs:
         continue-on-error: false
 
       - name: Terraform Deploy - Production
-        id: plan
+        id: deploy
         run: |
           ENV=Prod make apply \
           && terraform show Prod.plan

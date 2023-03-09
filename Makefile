@@ -45,7 +45,7 @@ plan:
 	@terraform workspace select $(value ENV)
 
 	@terraform plan  \
-  	  -var-file="accounts/$(value ENV)/" -input=false \
+  	  -var-file="accounts/$(value ENV)/main.tfvars" -input=false \
   	  -out $(value ENV).plan
 
 
@@ -59,7 +59,7 @@ apply:
 	@terraform workspace select $(value ENV)
 
 	@terraform apply -auto-approve -input=false \
-	  -var-file="accounts/$(value ENV)/"
+	  -var-file="accounts/$(value ENV)/main.tfvars"
 
 
 destroy:
@@ -79,7 +79,7 @@ destroy:
 	@echo "## 💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥 ##"
 	@read -p "Press enter to continue"
 	@terraform destroy \
-		-var-file="accounts/$(value ENV)/"
+		-var-file="accounts/$(value ENV)/main.tfvars"
 
 
 # Check that given variables are set and all have non-empty values,

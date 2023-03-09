@@ -1,4 +1,5 @@
 resource "aws_dynamodb_table" "terraform-lock" {
+  count          = var.dynamodb_table == true ? 1 : 0
   name           = "TerraformMainStateLock"
   read_capacity  = 5
   write_capacity = 5
@@ -10,9 +11,12 @@ resource "aws_dynamodb_table" "terraform-lock" {
   tags = {
     "Name" = "DynamoDB Terraform State Lock Table"
   }
+
+  provider = aws.primary
 }
 
 resource "aws_s3_bucket" "bucket" {
+  count  = var.bucket == true ? 1 : 0
   bucket = "terraform-multi-account"
   versioning {
     enabled = true
@@ -21,21 +25,27 @@ resource "aws_s3_bucket" "bucket" {
   tags = {
     Name = "S3 Remote Terraform State Store"
   }
+
+  provider = aws.primary
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "bucket" {
-  bucket = aws_s3_bucket.bucket.id
+  bucket = aws_s3_bucket.bucket[0].id
 
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "aws:kms"
     }
   }
+
+  provider = aws.primary
 }
 
 resource "aws_s3_bucket_versioning" "bucket" {
-  bucket = aws_s3_bucket.bucket.id
+  bucket = aws_s3_bucket.bucket[0].id
   versioning_configuration {
     status = "Enabled"
   }
+
+  provider = aws.primary
 }

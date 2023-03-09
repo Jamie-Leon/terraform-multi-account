@@ -1,10 +1,10 @@
 name: Terraform Deployment after push
 
-Triggers:
-  - Type: Push
-    Branches:
-      - main
-      
+on:
+  push:
+    branches:
+    - main
+
 env:
   AWS_REGION: eu-west-2
 

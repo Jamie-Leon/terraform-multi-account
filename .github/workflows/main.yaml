@@ -95,7 +95,7 @@ jobs:
           name: Dev.plan
           path: Dev.plan
 
-  Prod:
+  ProdBuild:
     name: Prod Build
     runs-on: ubuntu-20.04
     needs: Lint

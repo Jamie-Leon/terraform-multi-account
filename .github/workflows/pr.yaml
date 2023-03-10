@@ -1,4 +1,4 @@
-name: Anything
+name: Branch
 
 on:
   workflow_dispatch:

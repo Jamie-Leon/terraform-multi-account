@@ -20,11 +20,11 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate
-  
+
       - name: Run terraform fmt check
         id: fmt
         run: terraform fmt -check -diff -recursive
-  
+
   Dev:
     name: Dev Deployment
     runs-on: ubuntu-20.04

@@ -1,6 +1,7 @@
 name: Terraform Deployment
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -28,8 +29,8 @@ jobs:
   DevBuild:
     name: Dev Build
     runs-on: ubuntu-20.04
-    environment:
-      name: Development
+    # environment:
+    #   name: Development
     needs: Lint
     steps:
       - name: Check out code
@@ -59,7 +60,7 @@ jobs:
           ENV=Dev make plan -out Dev.plan
         continue-on-error: false
 
-      - name: Temporarily save Dev TF plan
+      - name: Upload Dev TF plan
         uses: actions/upload-artifact@v3.1.2
         with:
           name: Dev.plan
@@ -88,8 +89,8 @@ jobs:
           role-to-assume: arn:aws:iam::847175655404:role/TerraformUser
           role-session-name: InfraDeployOnMerge
 
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Download Dev TF plan
+        uses: actions/download-artifact@v3.0.2
         with:
           name: Dev.plan
           path: Dev.plan
@@ -98,8 +99,8 @@ jobs:
     name: Prod Build
     runs-on: ubuntu-20.04
     needs: Lint
-    environment:
-      name: Production
+    # environment:
+    #   name: Production
     steps:
       - name: Check out code
         uses: actions/checkout@v3.3.0
@@ -125,8 +126,15 @@ jobs:
       - name: Terraform Plan - Production
         id: plan
         run: |
-          ENV=Prod make plan
+          ENV=Prod make plan -out Prod.plan
         continue-on-error: false
+
+      - name: Upload Prod TF plan
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: Prod.plan
+          path: Prod.plan
+          retention-days: 1
 
       # - name: Terraform Deploy - Production
       #   id: deploy
@@ -134,3 +142,31 @@ jobs:
       #     ENV=Prod make apply \
       #     && terraform show Prod.plan
       #   continue-on-error: false
+
+  ProdDeploy:
+    name: Prod Deploy
+    runs-on: ubuntu-20.04
+    environment:
+      name: Production
+    needs: ProdBuild
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3.3.0
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+        with:
+          terraform_version: 1.3.9
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2.0.0
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::847175655404:role/TerraformUser
+          role-session-name: InfraDeployOnMerge
+
+      - name: Download Prod TF plan
+        uses: actions/download-artifact@v3.0.2
+        with:
+          name: Prod.plan
+          path: Prod.plan

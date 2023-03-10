@@ -1,4 +1,4 @@
-name: Terraform Deployment
+name: Master
 
 on:
   workflow_dispatch:

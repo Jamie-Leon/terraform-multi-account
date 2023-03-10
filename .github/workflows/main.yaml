@@ -26,7 +26,7 @@ jobs:
         run: terraform fmt -check -diff -recursive
 
   DevBuild:
-    name: DevBuild
+    name: Dev Build
     runs-on: ubuntu-20.04
     environment:
       name: Development
@@ -63,10 +63,11 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: Dev.plan
+          path: Dev.plan
           retention-days: 1
 
   DevDeploy:
-    name: DevDeploy
+    name: Dev Deploy
     runs-on: ubuntu-20.04
     environment:
       name: Development
@@ -91,9 +92,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Dev.plan
+          path: Dev.plan
 
   Prod:
-    name: Prod Deployment
+    name: Prod Build
     runs-on: ubuntu-20.04
     needs: Lint
     environment:

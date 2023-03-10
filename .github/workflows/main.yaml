@@ -16,7 +16,7 @@ env:
 jobs:
   Lint:
     name: Terraform Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Terraform Validate
         id: validate
@@ -28,7 +28,7 @@ jobs:
 
   DevBuild:
     name: Dev Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     # environment:
     #   name: Development
     needs: Lint
@@ -69,7 +69,7 @@ jobs:
 
   DevDeploy:
     name: Dev Deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment:
       name: Development
     needs: DevBuild
@@ -97,7 +97,7 @@ jobs:
 
   ProdBuild:
     name: Prod Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: Lint
     # environment:
     #   name: Production
@@ -145,7 +145,7 @@ jobs:
 
   ProdDeploy:
     name: Prod Deploy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment:
       name: Production
     needs: ProdBuild

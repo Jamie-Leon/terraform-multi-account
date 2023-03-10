@@ -25,7 +25,7 @@ jobs:
         id: fmt
         run: terraform fmt -check -diff -recursive
 
-  Dev:
+  DevBuild:
     name: DevBuild
     runs-on: ubuntu-20.04
     environment:
@@ -65,7 +65,7 @@ jobs:
           name: Dev.plan
           retention-days: 1
 
-  Dev Deploy:
+  DevDeploy:
     name: DevDeploy
     runs-on: ubuntu-20.04
     environment:

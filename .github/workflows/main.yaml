@@ -89,7 +89,7 @@ jobs:
           role-session-name: InfraDeployOnMerge
 
       - name: Download artifact
-      - uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: Dev.plan
 

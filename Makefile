@@ -14,7 +14,7 @@ default:
 	@echo "The "ENV" environment variable needs to be set to dev, test, or prod."
 	@echo ""
 	@echo "Exmple usage:"
-	@echo "  EVN=dev make plan"
+	@echo "  ENV=dev make plan"
 	@echo ""
 
 
